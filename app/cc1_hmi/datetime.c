@@ -16,20 +16,20 @@
 void AlarmTick()
 {
     // 9:00~12:00 14:00 ~ 18:00
-    //if(((gtp.hours  >= 9) && (gtp.hours  <= 12)) || ((gtp.hours  >= 14) && (gtp.hours  <= 18))) { 
+    //if(((gtp.hours  >= 9) && (gtp.hours  <= 12)) || ((gtp.hours  >= 14) && (gtp.hours  <= 18))) {
         //if(gtp.minute == 0) {
         //    beepMode = bibi;
         //    if(gtp.second > 2)
         //        beepMode = biNone;
         //}
-        //if(gtp.minute == 30) { 
+        //if(gtp.minute == 30) {
         //    beepMode = bi;
         //    if(gtp.second > 1)
         //        beepMode = biNone;
         //}
-    
+
     // 9:00 ~ 18:00
-    if((gtp.hours  >= 9) && (gtp.hours  <= 18)) { 
+    if((gtp.hours  >= 9) && (gtp.hours  <= 18)) {
         if(autoModeFlag)
             ledCmd = 1;     //open logo led
     }
@@ -37,10 +37,10 @@ void AlarmTick()
         if(autoModeFlag)
             ledCmd = 2;     //close logo led
     }
-    
+
     if(gtp.minute == 0 && (gtp.hours != 13)) {
       beepMode = bi;
-      if(gtp.second > 1)
+      if(gtp.second >= 1)
         beepMode = biNone;
     }
 }
@@ -52,9 +52,9 @@ u16 hex16Toint(u16 dat)
     u8 bit1 = (dat % 256) / 16;
     u8 bit2 = (dat % 4096) / 256;
     u8 bit3 = dat / 4096;
-    
+
     return (bit3 * 10 + bit2 + bit1 * 1000 + bit0 * 100);
-    
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,9 +62,9 @@ u8 hex8Toint(u8 dat)
 {
     u8 bit0 = dat % 16;
     u8 bit1 = dat / 16;
-    
-    return (bit1 * 10 + bit0); 
-    
+
+    return (bit1 * 10 + bit0);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ void setTimTick()
 {
     if (receiveTimFlag) {
         u8 *ptr = timData;
-        
+
         u16 yearTemp  = *(u16*)(ptr + 1);
         u8  mouthTemp = (u8)*(ptr + 3);
         u8  dayTemp   = (u8)*(ptr + 4);
@@ -80,7 +80,7 @@ void setTimTick()
         u8  minTemp   = (u8)*(ptr + 6);
         u8  secTemp   = (u8)*(ptr + 7);
         u8  weekTemp  = (u8)*(ptr + 8);
-        
+
         tp1.year    = (u32)hex16Toint(yearTemp);
         tp1.month   = (u32)hex8Toint(mouthTemp);
         tp1.day     = (u32)hex8Toint(dayTemp  );
@@ -89,7 +89,7 @@ void setTimTick()
         tp1.second  = (u32)hex8Toint(secTemp  );
         tp1.week    = (u32)hex8Toint(weekTemp) - 1;
         RTC_SetTime(&tp1);
-        
+
         receiveTimFlag = false;
     }
 }
@@ -100,12 +100,12 @@ u32 DateTimeToSeconds(dateTimeDef *tp)
 {
 	u32 LeapY = (tp->year == 2000) ? 0 : (( tp->year - 2000 - 1) / 4 + 1);
 	u32 ComY  = (tp->year - 2000) - LeapY;
-	
-	u32 Days =  ( tp->year % 4) ? 
-		(LeapY * 366 + ComY * 365 + Month_Days_Accu_C[tp->month - 1] + (tp->day - 1)) : 
-    (LeapY * 366 + ComY * 365 + Month_Days_Accu_L[tp->month - 1] + (tp->day - 1)); 
-    
-    
+
+	u32 Days =  ( tp->year % 4) ?
+		(LeapY * 366 + ComY * 365 + Month_Days_Accu_C[tp->month - 1] + (tp->day - 1)) :
+    (LeapY * 366 + ComY * 365 + Month_Days_Accu_L[tp->month - 1] + (tp->day - 1));
+
+
 	return Days * SecsPerDay + tp->hours * 3600 + tp->minute * 60 + tp->second;
 }
 
@@ -145,7 +145,7 @@ u16 GetMouthItem(u32 *sec,  u32 *item)
 ////////////////////////////////////////////////////////////////////////////////
 u16 GetMouth(u16 year, u32* sec)
 {
-	return (year % 4) ? GetMouthItem(sec,  &Month_Secs_Accu_C[0]) : 
+	return (year % 4) ? GetMouthItem(sec,  &Month_Secs_Accu_C[0]) :
     GetMouthItem(sec,  &Month_Secs_Accu_L[0]);
 }
 
@@ -166,20 +166,20 @@ u16 GetDay(u16 year, u32 *sec)
 {
 	u16 day = *sec / SecsPerDay;
 	*sec = *sec % SecsPerDay;
-	return (year % 4) ? GetDayItem(day,  &Month_Days_Accu_C[0]) : 
+	return (year % 4) ? GetDayItem(day,  &Month_Days_Accu_C[0]) :
     GetDayItem(day,  &Month_Days_Accu_L[0]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void RTC_GetTime(dateTimeDef *tp)
-{ 
+{
 	u32 sec = RTC_GetCounter();
-	
+
 	tp->week = GetWeek(&sec);
 	tp->year = GetYear(&sec);
 	tp->month = GetMouth(tp->year ,&sec);
 	tp->day = GetDay(tp->year ,&sec);
-	
+
 	tp->hours 	=  sec / 3600;
 	tp->minute 	= (sec % 3600) / 60;
 	tp->second 	= (sec % 3600) % 60;
@@ -196,7 +196,7 @@ void adjYear()
     //	if (Key3CntF)	{if (--gtp.year < 2016)	gtp.year = 2025;}
     //	else 			{if (++gtp.year > 2025)	gtp.year = 2016;}
     //	u8 day = Month_Days[gtp.month - 1];
-    //	if (gtp.year % 4)	day--; 
+    //	if (gtp.year % 4)	day--;
     //	if (gtp.day > day) gtp.day = day;
 }
 void adjMonth()
@@ -204,14 +204,14 @@ void adjMonth()
     //	if (Key3CntF)	{if (--gtp.month < 1) 	gtp.month = 12;}
     //	else 			{if (++gtp.month > 12) 	gtp.month = 1;}
     //	u8 day = Month_Days[gtp.month - 1];
-    //	if (gtp.year % 4)	day--; 
+    //	if (gtp.year % 4)	day--;
     //	if (gtp.day > day) gtp.day = day;
 }
 
 void adjDay()
 {
     //	u8 day = Month_Days[gtp.month - 1];
-    //	if (gtp.year % 4)	day--; 
+    //	if (gtp.year % 4)	day--;
     //	if (Key3CntF)	{if (--gtp.day < 1)	 	gtp.day = day;}
     //	else 			{if (++gtp.day > day) 	gtp.day = 1;}
 }
@@ -220,7 +220,7 @@ void adjHours()
 {
     //	if (Key3CntF)	{if (--gtp.hours == -1) gtp.hours = 23;}
     //	else 			{if (++gtp.hours > 23) 	gtp.hours = 0;}
-}		
+}
 
 void adjMinute()
 {

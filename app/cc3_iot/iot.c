@@ -55,7 +55,7 @@ bool delay(u16 ms)
     return false;
 }
 
-#if 0
+#if 1
 void UART_Configure()
 {
     UART_InitTypeDef InitStructure;
@@ -119,12 +119,12 @@ void hardwareCfg()
     CloseLED();
 
     if (HTS221_Init())  LD4_on();
-    if (LPS22HB_Init()) LD5_on();
+    //if (LPS22HB_Init()) LD5_on();
     if (LSM6DSL_Init()) LD6_on();
 
     HTS221_Get_Equation_Temp();
     HTS221_Get_Equation_Hum();
-    LPS22HB_Config();
+    //LPS22HB_Config();
 }
 
 //bool checkCommond()
@@ -229,10 +229,10 @@ int main(void)
         if (tickFlag) {
             tickFlag = false;
             memset(txBuffer, 0, 24);
-            getSensorInfo();
+            //getSensorInfo();
         }
 
-        //Get the array number of the issued command 
+        //Get the array number of the issued command
         if(UART_GetITStatus(UART2, UART_IT_RXIEN)) {
             revStr[rxCnt] = UART_ReceiveData(UART2);
             UART_ClearITPendingBit(UART2, UART_IT_RXIEN);
@@ -289,7 +289,7 @@ int main(void)
 
 
 
-#if 1
+#if 0
 float avTemp;
 float avHum;
 double press;

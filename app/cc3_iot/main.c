@@ -68,47 +68,47 @@ int main(void)
     MCUID = SetSystemClock(emSYSTICK_On, (u32*)&AppTaskTick);
 
     initPara();
-    initPeripheral();
+    //initPeripheral();
     vdLED = 1;
-    
+
     while (1) {
         //----------- user code -----------
 
-        
-        
+
+
 
         //----------- key && led ----------
         if (SysKeyboard(&vkKey)) {
             switch  (vkKey) {
                 case  VK_K0:
-                
-                
-                
+
+
+
                 KeyProcess_Key0();
                 break;
                 case  VK_K1:
-                
-                
-                
+
+
+
                 KeyProcess_Key1();
                 break;
                 case  VK_K2:
-                
-                
-                
+
+
+
                 KeyProcess_Key2();
                 break;
                 case  VK_K3:
-                
-                
-                
+
+
+
                 KeyProcess_Key3();
                 break;
                 default:
                 break;
             }
         }
-        if (ledFlag) {                
+        if (ledFlag) {
             vdLED = vdLED << 1;
             if(vdLED > 8)
                 vdLED = 1;
