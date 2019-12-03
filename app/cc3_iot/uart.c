@@ -46,7 +46,7 @@ void initUART(UART_TypeDef* UARTx)
 {
     UART_InitTypeDef UART_InitStructure;
 
-    UART_InitStructure.BaudRate = 115200;
+    UART_InitStructure.BaudRate = 9600;
     UART_InitStructure.WordLength = UART_WordLength_8b;
     UART_InitStructure.StopBits = UART_StopBits_1;
     UART_InitStructure.Parity = UART_Parity_No;
@@ -85,7 +85,7 @@ void initUART(UART_TypeDef* UARTx)
 void UART1_IRQHandler()
 {
     if(UART_GetITStatus(UART1, UART_IT_RXIEN) != RESET) {
-        UART2->TDR = UART1->RDR;
+//        UART2->TDR = UART1->RDR;
         UART_ClearITPendingBit(UART1, UART_ICR_RXICLR);
     }
 }
