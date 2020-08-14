@@ -63,7 +63,7 @@ void initPara()
 {
     recFlag     = false;
     txSendFlag  = false;
-    //beepEn      = true;
+    beepEn      = false;
     alarmEn     = false;
     isFirstRx   = true;
     beepFlag    = false;
