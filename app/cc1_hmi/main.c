@@ -52,7 +52,10 @@ void AppTaskTick()
     AlarmTick();
     encodeTick();
     adcTick();
-
+    if(adcVolt > 500)
+        beepEn      = true;
+    else
+        beepEn      = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,15 +63,17 @@ void initPara()
 {
     recFlag     = false;
     txSendFlag  = false;
-    beepEn      = false;
+    //beepEn      = true;
+    alarmEn     = false;
     isFirstRx   = true;
     beepFlag    = false;
     autoModeFlag= false;
+    
     rev017Sta   = 0;
     ledCmd      = 0;
     timTick     = 0;
     uartSendTick = 0;
-    beepMode    = biNone;
+    beepMode    = bibi;
 }
 
 
@@ -102,7 +107,7 @@ int main(void)
             autoModeFlag ? (autoModeFlag = false) : (autoModeFlag = true);
         }
         if((SysKeyboard(&vkKey) && (vkKey == VK_K1)) || TPAD_Scan1(0)){
-            beepEn ? (beepEn = false) : (beepEn = true);
+            alarmEn ? (alarmEn = false) : (alarmEn = true);
             beepMode = bi;
         }
         if((SysKeyboard(&vkKey) && (vkKey == VK_K2)) || TPAD_Scan2(0)){

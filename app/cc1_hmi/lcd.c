@@ -42,7 +42,7 @@ void lcd_desplay()
     lcd_showString      (10, 15,230, 24, 24, "MindMotion Nanjing");
     lcd_drawLine        ( 5, 45,235, 45);
     lcd_showString      (20, MODELINE,220, 16, 16, "Auto Mode:(K1)");
-    lcd_showString      (20, BEEPLINE,220, 16, 16, "Beep Mode:(K2)");
+    lcd_showString      (20, BEEPLINE,220, 16, 16, "Alarm Mode:(K2)");
     lcd_showString      (20, SENDLINE,220, 16, 16, "Send Data:(K3)");
     lcd_showString      (20, MOTOLINE,220, 16, 16, "Rcv MB017 Sta:");
     
@@ -66,7 +66,7 @@ void lcdTick()
     else
         lcd_showString(160, MODELINE,220, 16, 16, "OFF!");
     
-    if(beepEn)
+    if(alarmEn)
         lcd_showString(160, BEEPLINE,220, 16, 16, "ON! ");
     else
         lcd_showString(160, BEEPLINE,220, 16, 16, "OFF!");

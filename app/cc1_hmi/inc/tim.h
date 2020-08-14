@@ -17,6 +17,7 @@ typedef enum {
 #define GLOBAL extern
 #endif
 
+GLOBAL bool     alarmEn;
 GLOBAL bool     beepEn;
 GLOBAL bool     beepFlag;
 GLOBAL u16      timTick;

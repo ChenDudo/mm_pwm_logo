@@ -37,11 +37,12 @@ void AlarmTick()
         if(autoModeFlag)
             ledCmd = 2;     //close logo led
     }
-    
-    if(gtp.minute == 0 && (gtp.hours != 13)) {
-      beepMode = bi;
-      if(gtp.second > 1)
-        beepMode = biNone;
+    if(alarmEn){
+        if(gtp.minute == 0 && (gtp.hours != 13)) {
+            beepMode = bi;
+            if(gtp.second > 1)
+                beepMode = biNone;
+        }
     }
 }
 
