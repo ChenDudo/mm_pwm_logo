@@ -40,19 +40,37 @@ void RTC_IRQHandler(void)
     RTC_WaitForLastTask();
 }
 
+u16 fac_ms = 1000;
+void delay_ms(u16 nms)
+{	 		  	  
+	u32 temp;		   
+	SysTick->LOAD=(u32)nms*fac_ms;				//??????(SysTick->LOAD?24bit)
+	SysTick->VAL =0x00;							//????????
+	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk ;	//???????  
+	do
+	{
+		temp=SysTick->CTRL;
+	}while((temp&0x01)&&!(temp&(1<<16)));		//????????   
+	SysTick->CTRL&=~SysTick_CTRL_ENABLE_Msk;	//????????
+	SysTick->VAL =0X00;       					//????????	  	    
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 bool initRTC(void)
 {
+    u32 delay = 0;
+    u8 temp = 0;
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);
     PWR->CR |= PWR_CR_DBP;
 
     if (BKP_ReadBackupRegister(BKP_DR1) != 0x2019) {
-        
         BKP_DeInit();
         RCC_LSEConfig(RCC_LSE_ON);
         while (!RCC_GetFlagStatus(RCC_FLAG_LSERDY)) {
-            return 1;
+            temp ++;
+            delay_ms(10);
         };
+        if(temp >= 249) return 1;
         RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
         RCC_RTCCLKCmd(ENABLE);
         BKP_WriteBackupRegister(BKP_DR1, 0x2019);
